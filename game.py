@@ -1,7 +1,8 @@
 import random
 from re import X 
-
+# first create board range (0,9)
 board=[i for i in range(0,9)]
+# player computer 
 player, computer = '',''
 # Corners, Centers and others, respectively
 moves=((1,7,3,9),(5,),(2,4,6,8))
@@ -9,27 +10,34 @@ moves=((1,7,3,9),(5,),(2,4,6,8))
 winners=((0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6))
 # Table
 tab=range(1,10)
+# print Board use this function
 def print_board():
     x=1
     for i in board:
+        # sperate the box
         end = ' | '
+        # Box 3
         if x%3 == 0:
             end = '\n'
+        # sperte uper and below through with dot
             if i != 1: end+='--------\n';
+        # player assign Value 'X' and "O"
         char=''
         if i in ('X', 'O'): char=i;
         x+=1
         print(char,end=end)
-        
+# this function generate the integer number
 def select_char():
     chars=('X','O')
     if random.randint(0,1) == 0:
         return chars[::-1]
     return chars
+# player move this function decide player when move 
 def can_move(brd, player, move):
     if move in tab and brd[move-1] == move-1:
         return True
     return False 
+# can_win function decide the player follow the condition to given upper win combination
 def can_win(brd, palyer, move):
     places=[]
     x=0
@@ -37,15 +45,18 @@ def can_win(brd, palyer, move):
         if i == player: places.append(X); 
         x+=1
     win=True 
+    # when player did not follow the given condition to lose the game
     for tup in winners:
         win=True
         for ix in tup:
             if brd[ix]!= player:
                 win=False
                 break
+    # player follow the winner combination win and condition True game break
         if win == True:
             break
     return win
+# function make_move check the win condition is true or not
 def make_move(brd, player, move, undo=False):
     if can_move(brd, player, move):
         brd[move-1] = player
@@ -54,6 +65,7 @@ def make_move(brd, player, move, undo=False):
             brd[move-1] = move-1
         return (True, win)
     return (False, False)
+# computer_move this function follow the opsite player when upper gave computer moves and check 
 def computer_move():
     move=-1
     for i in range(1, 10):
@@ -72,22 +84,27 @@ def computer_move():
                                 move=mv
                                 break
                         return make_move(board, computer, move)
+# space_exist this function count the X and O in board 
 def space_exist():
     return board.count('X') + board.count('O') != 9
 player, computer = select_char()
+# when player and computer did not complete the follow condition game draw
 print('player is [%s] and computer is [%s]' % (player, computer))
 result='%%% Deuce ! %%%'
 while space_exist():
     print_board()
     print('# Make your move ! [1-9] : ', end='')
-    move = int(input())
+    # player commond invail number 0,9 print invaild number try again and coninue
+    move =int(input())
     moved, won = make_move(board, player, move)
     if not moved:
         print(' >> invalid number ! try again !')
         continue
+    # if player or computer follow the upper condition and win print Congratulations and game break
     if won:
         result='*** Congratulations ! You won ! ***'
         break
+    # player or computer did not follow the condition will lose game and break the game
     elif computer_move()[1]:
         result='=== You lose ! =='
         break;
