@@ -240,4 +240,3 @@ for x in range(9):
 # This is to declare draw only if nobody won.
 if winCheck == 0:
 	print("Gane Draw!")
-
